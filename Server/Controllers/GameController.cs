@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using rsp_game.Dto;
-using rsp_game.Mapper;
 using rsp_game.Services;
 
 namespace rsp_game.Controllers;
@@ -21,7 +20,7 @@ public class GameController : ControllerBase
     public IActionResult CreateGame([FromBody] CreatePlayerDto player)
     {
         var game = _gameService.CreateGame(player.Name);
-        return Ok(GameMapper.ToDto(game));
+        return Ok(game);
     }
 
     [HttpGet]
@@ -31,7 +30,7 @@ public class GameController : ControllerBase
         var game = _gameService.GetGame(id);
         if (game != null)
         {
-            return Ok(GameMapper.ToDto(game));
+            return Ok(game);
         }
 
         return NotFound(new { Message = "Game not found" });
@@ -44,7 +43,7 @@ public class GameController : ControllerBase
         var game = _gameService.JoinGame(id, player.Name);
         if (game != null)
         {
-            return Ok(GameMapper.ToDto(game));
+            return Ok(game);
         }
 
         return NotFound(new { Message = "Game not found" });
@@ -54,10 +53,15 @@ public class GameController : ControllerBase
     [Route("{id}/move")]
     public IActionResult ExecuteMove(Guid id, [FromBody] MakeMoveDto moveDto)
     {
-        var game = _gameService.ExecuteMove(id, moveDto);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var game = _gameService.ExecuteMove(id, moveDto.PlayerId, moveDto.Move);
         if (game != null)
         {
-            return Ok(GameMapper.ToDto(game));
+            return Ok(game);
         }
 
         return NotFound(new { Message = "Game not found" });

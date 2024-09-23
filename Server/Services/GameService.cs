@@ -1,5 +1,4 @@
-﻿using rsp_game.Dto;
-using rsp_game.Models;
+﻿using rsp_game.Models;
 using rsp_game.Repositories;
 
 namespace rsp_game.Services;
@@ -56,7 +55,7 @@ public class GameService
         return game;
     }
 
-    public Game? ExecuteMove(Guid id, MakeMoveDto moveDto)
+    public Game? ExecuteMove(Guid id, string playerId, string move)
     {
         var game = _gameRepository.Get(id);
 
@@ -65,7 +64,7 @@ public class GameService
             return null;
         }
 
-        game.MakeMove(moveDto.PlayerId, moveDto.Move);
+        game.MakeMove(playerId, move);
 
         _gameRepository.Save(game);
 

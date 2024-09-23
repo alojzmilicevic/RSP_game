@@ -1,9 +1,10 @@
 ﻿namespace rsp_game.Models;
 
 
-public enum Move
+public static class Moves
 {
-    Rock,
-    Paper,
-    Scissors,
+    public const string Rock = "Rock";
+    public const string Scissors = "Scissors";
+    public const string Paper = "Paper";
+    public const string None = "";
 }

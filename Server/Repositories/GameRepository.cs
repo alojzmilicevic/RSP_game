@@ -11,7 +11,7 @@ public interface IGameRepository
 
 public class InMemoryGameRepository : IGameRepository
 {
-    private readonly Dictionary<Guid, Game> _games = new Dictionary<Guid, Game>();
+    private readonly Dictionary<Guid, Game> _games = [];
 
     public Game Get(Guid id) => _games.TryGetValue(id, out var game) ? game : null;
     public void Save(Game game) => _games[game.Id] = game;

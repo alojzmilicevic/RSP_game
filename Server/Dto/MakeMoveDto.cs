@@ -1,9 +1,11 @@
 ﻿using rsp_game.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace rsp_game.Dto;
 
 public class MakeMoveDto
 {
-    public Move Move { get; set; }
+    [RegularExpression("Rock|Scissors|Paper", ErrorMessage = "Invalid move type. Must be 'Rock', 'Scissors', or 'Paper'.")]
+    public string Move { get; set; } = string.Empty;
     public string PlayerId { get; set; } = string.Empty;
 }
