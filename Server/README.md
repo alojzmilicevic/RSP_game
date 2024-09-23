@@ -2,6 +2,44 @@
 
 This project is a simple implementation of a Rock Paper Scissors game using **ASP.NET Core 8 Web API**. The API allows users to create games, join games, and make moves. The core game logic is handled by a service with an in-memory repository.
 
+# Improvements
+
+## 1. Code Structure & Organization
+- **Separate Concerns More Clearly**: The `GameController` and `GameService` could benefit from better separation of concerns. For instance, move validation, game creation logic, and result computation could each be handled in dedicated classes or services to avoid a bloated service class.
+- **DTO Validation**: Move validation (e.g., ensuring "Rock", "Paper", or "Scissors") could be abstracted into an attribute or validation service.
+
+## 2. Dependency Injection & Service Lifetimes
+- **Singleton for GameService**: Services like `GameService` are being registered as `Singleton`. This works fine for an in-memory implementation, but could have state management implications. For bigger applications switching to `Scoped` or `Transient` might help scalability.
+  
+```csharp
+builder.Services.AddScoped<IGameService, GameService>();
+```
+
+## 3. Error Handling & Responses
+- **Standardize Error Responses**: Use a consistent error response model (e.g., `Message`, `ErrorCode`, etc.) for better client-side error handling.
+
+```csharp
+return BadRequest(new { Message = "Invalid move type.", ErrorCode = 400 });
+```
+- **Exception Handling**: Ensure service-level exceptions (e.g., invalid game state) are handled gracefully, returning appropriate HTTP responses.
+
+## 4. Validation
+- **DTO Validation**: Fully utilize ASP.NET Core's data annotations or consider FluentValidation for complex validation to keep controller logic clean.
+
+```csharp
+[RegularExpression("Rock|Paper|Scissors", ErrorMessage = "Invalid move type.")]
+```
+
+## 5. CORS Setup
+- **Review CORS Policy**: The current CORS policy is restricted to a specific origin (`http://localhost:5173`). Thats something that should probably be looked over in a production application.
+
+## 6. Game Logic
+- **Extending Game States**: In a bigger app i would consider encapsulating game state and logic in dedicated classes. 	
+    Using a state machine pattern could help manage different game phases (e.g., creating, waiting, moves, results).
+
+## 7. Unit Testing
+- **Testing Coverage**: Ensure unit tests for critical logic (e.g., determining results, validating moves). Adding integration tests to cover API endpoint behavior would be beneficial.
+
 ## Features
 
 - Create a new game with a player.
